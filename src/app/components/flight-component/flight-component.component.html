@@ -1,0 +1,170 @@
+<div class="container">
+  <!-- Flight search form -->
+  <div class="search-container">
+    <form
+      #searchForm="ngForm"
+      class="search-box"
+      (ngSubmit)="onSearch(searchForm)"
+    >
+      <h4>
+        Search Flights
+        <i class="fas fa-fighter-jet rot"></i>
+        <!-- Icon for the flight search -->
+      </h4>
+
+      <!-- Filter and Sort options -->
+      <div class="filter-sort-container">
+        <select #val (change)="sortFlight(val.value)">
+          <option value="default">Filters</option>
+          <option value="fastest">Fastest</option>
+          <option value="cheapest">Cheapest</option>
+        </select>
+      </div>
+
+      <!-- Source Field -->
+      <div class="form-group">
+        <label for="source">Source:</label>
+        <input
+          type="text"
+          id="source"
+          name="source"
+          #source="ngModel"
+          [(ngModel)]="search.source"
+          (ngModelChange)="onSourceChange($event)"
+          placeholder="Enter source city"
+          required
+        />
+        <!-- Display suggestions for source city -->
+        <ul *ngIf="filteredSources.length > 0" class="suggestions">
+          <li
+            *ngFor="let suggestion of filteredSources"
+            (click)="selectSource(suggestion)"
+          >
+            {{ suggestion }}
+          </li>
+        </ul>
+        <!-- Validation message for source field -->
+        <div
+          *ngIf="
+            source.invalid &&
+            (source.dirty || source.touched || searchForm.submitted)
+          "
+          class="text-danger"
+        >
+          Source city is required
+        </div>
+      </div>
+
+      <!-- Destination Field -->
+      <div class="form-group">
+        <label for="destination">Destination:</label>
+        <input
+          type="text"
+          id="destination"
+          name="destination"
+          #destination="ngModel"
+          [(ngModel)]="search.destination"
+          (ngModelChange)="onDestinationChange($event)"
+          placeholder="Enter destination city"
+          required
+        />
+        <!-- Display suggestions for destination city -->
+        <ul *ngIf="filteredDestinations.length > 0" class="suggestions">
+          <li
+            *ngFor="let suggestion of filteredDestinations"
+            (click)="selectDestination(suggestion)"
+          >
+            {{ suggestion }}
+          </li>
+        </ul>
+        <!-- Validation message for destination field -->
+        <div
+          *ngIf="
+            destination.invalid &&
+            (destination.dirty || destination.touched || searchForm.submitted)
+          "
+          class="text-danger"
+        >
+          Destination city is required
+        </div>
+      </div>
+
+      <!-- Date Field -->
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          #date="ngModel"
+          [(ngModel)]="search.date"
+          required
+        />
+        <!-- Validation message for date field -->
+        <div
+          *ngIf="
+            date.invalid && (date.dirty || date.touched || searchForm.submitted)
+          "
+          class="text-danger"
+        >
+          Date is required
+        </div>
+      </div>
+
+      <!-- Submit button for search -->
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <!-- Flight search results -->
+  <div class="results-container">
+    <!-- Message when no flights match the search criteria -->
+    <div
+      *ngIf="flights.length === 0"
+      style="text-align: center; color: #ffffff"
+    >
+      No flights are available for specified details
+    </div>
+
+    <!-- Displaying each flight -->
+    <div class="flight-item" *ngFor="let flight of flights; index as i">
+      <h4>
+        Flight {{ flight.flightNumber }} - {{ flight.flightName }} -
+        AvailableSeats:-
+        <strong style="color: rgb(2, 122, 16)">
+          {{ flight.availableSeats }}
+        </strong>
+      </h4>
+      <p>
+        <strong>From:</strong> {{ flight.source }} | <strong>To:</strong>
+        {{ flight.destination }} | <strong>Duration: </strong>
+        {{ flight.duration }}
+      </p>
+      <p>
+        <i class="fas fa-calendar-alt"></i> <strong> Date:</strong>
+        {{ flight.flightDate }} | <strong>Take-off:</strong>
+        {{ flight.takeOff }} | <strong>Landing:</strong> {{ flight.landing }}
+      </p>
+      <p>
+        <i class="fa-solid fa-chair"></i>
+        <strong> Business Class Seats:</strong>
+        {{ flight.businessClassSeats }} | <strong>Economy Class Seats:</strong>
+        {{ flight.economyClassSeats }}
+      </p>
+      <p>
+        <i class="fas fa-hand-holding-usd"></i>
+        <strong> Business Class Price:</strong>
+        <strong style="color: red">
+          ₹{{ flight.businessPrice | number : "1.2-2" }}</strong
+        >
+        |
+        <strong>Economy Class Price:</strong>
+        <strong style="color: red">
+          ₹{{ flight.economyPrice | number : "1.2-2" }}</strong
+        >
+      </p>
+      <!-- Book button -->
+      <button (click)="bookFlight(flights[i])" routerLink="/book">Book</button>
+    </div>
+  </div>
+</div>

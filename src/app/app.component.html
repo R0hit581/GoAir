@@ -1,0 +1,133 @@
+<div class="navb">
+  <!-- Navigation Bar, which will only be displayed if `nav` is true -->
+  <nav *ngIf="nav" class="navbar">
+    <div class="navbar-brand">
+      <a href="#">GoA!r</a>
+    </div>
+    <ul class="navbar-menu">
+      <!-- Link to Flight page -->
+      <li><a routerLink="/flight" routerLinkActive="active">Flights</a></li>
+
+      <!-- Bookings link with dynamic class binding to highlight the active link -->
+      <li>
+        <a
+          (click)="gotoshow()"
+          [ngClass]="{ active: isBookingsActive }"
+          routerLink=""
+        >
+          Bookings
+        </a>
+      </li>
+
+      <!-- Link to Contact Us page -->
+      <li><a routerLink="/contactus" routerLinkActive="active">Contact</a></li>
+
+      <!-- Link to About Us page -->
+      <li><a routerLink="/about" routerLinkActive="active">About Us</a></li>
+    </ul>
+
+    <!-- User info section -->
+    <div class="navbar-user">
+      <!-- Display the username and open user modal on click -->
+      <span (click)="openUserModal()" style="color: white; font: 4px">
+        <i *ngIf="username" class="fas fa-user-tie"></i><a>{{ username }}</a>
+      </span>
+    </div>
+
+    <!-- Login link (visible when `login` is true) -->
+    <div *ngIf="login" class="navbar-login">
+      <a routerLink="/login" (click)="checkLogin()">Login</a>
+    </div>
+
+    <!-- Logout link (visible when `logout` is true) -->
+    <div *ngIf="logout" class="navbar-login">
+      <a
+        routerLink="/login"
+        (click)="checkLogout()"
+        style="color: red"
+        [hidden]="!this.username"
+      >
+        <i class="fas fa-sign-out-alt"></i>Logout
+      </a>
+    </div>
+  </nav>
+
+  <!-- Router Outlet to display the routed components -->
+  <body>
+    <router-outlet></router-outlet>
+  </body>
+</div>
+
+<!-- User Details Modal (Initially hidden) -->
+<div class="modal" id="userModal" style="display: none">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">User Details</h5>
+        <!-- Close button to hide the modal -->
+        <button type="button" class="close" (click)="closeUserModal()">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Form to update user details -->
+        <form #userForm="ngForm" (ngSubmit)="updateUser(userForm)">
+          <!-- Name input -->
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              [(ngModel)]="user.name"
+              name="name"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <!-- Phone input -->
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input
+              type="text"
+              id="phone"
+              [(ngModel)]="user.phone"
+              name="phone"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <!-- Password input -->
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              [(ngModel)]="user.password"
+              name="password"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <!-- Confirm Password input -->
+          <div class="form-group">
+            <label for="confirmpassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmpassword"
+              [(ngModel)]="confirmpassword"
+              name="confirmpassword"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <!-- Submit button for the form -->
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
